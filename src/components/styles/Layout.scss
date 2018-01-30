@@ -1,0 +1,14 @@
+@import './variables';
+
+.Layout__content {
+    position: absolute;
+    top: 0;
+    left: $sidebar-width;
+    width: calc(100% - #{$sidebar-width});
+    height: 100%;
+    background-color: $bg-color;
+}
+
+.Layout__body {
+    padding: $padding-md * 2;
+}
