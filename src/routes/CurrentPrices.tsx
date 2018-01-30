@@ -7,19 +7,7 @@ import { bindActionCreators } from 'redux';
 
 import './styles/CurrentPrices.scss';
 
-interface ICurrentPricesProps {
-//     // redux actions
-//     updateBTC: Function;
-//     updateETH: Function;
-//     updateXRP: Function;
-//     addAddress: Function;
-//     addTransactions: Function;
-//     // data
-//     transactions: any[];
-//     addresses: any[];
-//     btcToUSD: number;
-//     btcUpdatedAt: number | string;
-// }
+interface ICurrentPricesProps {}
 
 class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
 
@@ -31,6 +19,19 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
     }
 
     componentDidMount() {
+        const currencyPairs = [ 'xrm-btc', 'ltc-btc', 'doge-btc' ];
+        const urls = currencyPairs.map(pair => {
+            return `https://api.cryptonator.com/api/full/${pair}`
+        });
+
+        urls.forEach(url => {
+            setInterval(() => {
+                axios.get(url)
+                    .then(res=> {
+                        console.log(res);
+                    });
+            }, 60000);
+        });
 
     }
 
