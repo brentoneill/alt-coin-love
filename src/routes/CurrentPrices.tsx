@@ -1,49 +1,47 @@
 import * as React from 'react';
 import { Grid, Card } from 'semantic-ui-react';
-import axios from 'axios';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import Ticker, { ITickerData } from '../components/Ticker';
 import './styles/CurrentPrices.scss';
 
 interface ICurrentPricesProps {}
-
 class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
 
-    public socket;
+    private currencyPairs: string[];
 
     constructor(props: ICurrentPricesProps) {
         super(props);
         this.state = {};
+        this.currencyPairs = [ 'xmr-btc', 'ltc-btc', 'doge-btc' ];
     }
 
     componentDidMount() {
-        const currencyPairs = [ 'xrm-btc', 'ltc-btc', 'doge-btc' ];
-        const urls = currencyPairs.map(pair => {
-            return `https://api.cryptonator.com/api/full/${pair}`
-        });
-
-        urls.forEach(url => {
-            setInterval(() => {
-                axios.get(url)
-                    .then(res=> {
-                        console.log(res);
-                    });
-            }, 60000);
-        });
-
     }
 
     componentWillReceiveProps(nextProps: ICurrentPricesProps) {
+        console.log(nextProps);
+    }
 
+    @autobind
+    onUpdatePrices(pair: string, data: ITickerData, timestamp: number) {
+        console.log(pair, data, new Date(timestamp));
+        console.log('---------------------------------------');
+        // Make some call to the redux store to add the new ticker data
     }
 
     render() {
+        const tickers = this.currencyPairs.map((pair, idx, pairs) => {
+            return <Ticker key={pair} interval={60000 * (idx+1)} currencyPair={pair} onChange={this.onUpdatePrices}/>;
+        });
+
         return (
             <div className="CurrentPrices">
                 <Grid stackable={true}>
                     <Grid.Row columns={16}>
+                        {tickers}
                     </Grid.Row>
                 </Grid>
             </div>
