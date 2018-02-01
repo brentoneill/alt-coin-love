@@ -51,12 +51,18 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
         });
         return recentPriceData.map((priceData, idx, arr) => {
           let bestDealIdx = 0;
+          let worstDealIdx = 2;
           let showBestDealBadge = false;
+          let showWorstDealBadge = false;
           if (bestDealIdx === idx) {
             showBestDealBadge = true;
           }
+          if (worstDealIdx === idx) {
+            showWorstDealBadge = true;
+          }
 
           let bestDealBadgeMarkup = showBestDealBadge ? <Button basic color="green" onClick={ () => { window.open(priceData.exchange.appUrl)} }>Best Deal</Button> : null;
+          let worstDealBadgeMarkup = showWorstDealBadge ? <Button basic color="red">Worst Deal</Button> : null;
 
           return (
             <Table.Row key={idx}>
@@ -71,6 +77,7 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
               </Table.Cell>
               <Table.Cell textAlign="right">
                 {bestDealBadgeMarkup}
+                {worstDealBadgeMarkup}
               </Table.Cell>
             </Table.Row>
           );
