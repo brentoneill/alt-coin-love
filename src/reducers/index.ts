@@ -3,7 +3,8 @@ import PricesReducer from './reducer_prices';
 
 const rootReducer = combineReducers({
     // all dashboard info
-    dash: PricesReducer
+    app: PricesReducer
 });
 
-export default rootReducer;
+export { IPriceData, IExchange } from './reducer_prices';
+export default rootReducer

@@ -5486,6 +5486,10 @@ redux-promise@^0.5.3:
   dependencies:
     flux-standard-action "^0.6.1"
 
+redux-thunk@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.2.0.tgz#e615a16e16b47a19a515766133d1e3e99b7852e5"
+
 redux@^3.0.4:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
@@ -5565,7 +5569,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@*, request@2, "request@>= 2.35.0", request@^2.0.0, request@^2.74.0:
+request@*, request@2, "request@>= 2.35.0", request@^2.0.0, request@^2.74.0, request@^2.83.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:

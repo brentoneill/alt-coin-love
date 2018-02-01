@@ -7,12 +7,6 @@ interface IAppProps {}
 interface IAppState {}
 
 export default class App extends React.Component<IAppState, IAppProps> {
-
-    constructor(props: IAppProps) {
-        super(props);
-        this.state = {};
-    }
-
     render(): JSX.Element {
         return (
             <div className="App__container">
