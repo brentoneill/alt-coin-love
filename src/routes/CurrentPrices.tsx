@@ -33,7 +33,7 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
           {
             appUrl: 'https://gate.io/',
             name: 'gate',
-            apiUrl: 'http://data.gate.io/api2/1/tickers'
+            apiUrl: 'https://data.gate.io/api2/1/tickers'
           },
           {
             appUrl: 'https://hitbtc.com/',
