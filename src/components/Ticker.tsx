@@ -76,10 +76,34 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
       }
     }
 
+    calculateWeightedPrice(recentPriceData): string {
+      let weightedPrice = 0;
+
+      recentPriceData.forEach(priceData => {
+        weightedPrice += priceData.price;
+      });
+
+
+      return (weightedPrice / recentPriceData.length).toFixed(8);
+    }
+
+    calculateVolume(recentPriceData): number {
+      let volume;
+
+      recentPriceData.forEach(priceData => {
+        console.log(priceData.volume)
+        volume = volume + parseFloat(priceData.volume);
+      });
+
+      return volume;
+    }
+
     render(): JSX.Element {
-        const { pair, currentPrice, currentVolume } = this.props.tickerData;
+        const { pair } = this.props.tickerData;
         const { prices } = this.state;
         const recentPriceData = prices.slice(0, 3);
+        const currentPrice = this.calculateWeightedPrice(recentPriceData);
+        const currentVolume = this.calculateVolume(recentPriceData);
         const exchangePriceListMarkup = this.renderExchangePriceListMarkup(recentPriceData)
         const coin = pair.split('-')[0].toUpperCase();
 
@@ -88,10 +112,9 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
             <Card>
               <Card.Content>
                 <Card.Header>
-                  <h2>{ pair.toUpperCase() } <i className={`cc ${coin}`}></i></h2>
+                  <h2><i className={`cc ${coin}`}></i>&nbsp; { pair.toUpperCase() }</h2>
                 </Card.Header>
                 <Card.Meta>
-
                 </Card.Meta>
                 <Card.Description>
                   <h3>Price (BTC): { currentPrice }</h3>
