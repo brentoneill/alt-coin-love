@@ -40,6 +40,7 @@ export function fetchExchangeData(exchange: IExchange) {
             transformedData.tickers.forEach(ticker => {
                 ticker.exchange = exchange;
                 dispatch(addExchangeDataToTicker(ticker));
+
             });
         });
     }

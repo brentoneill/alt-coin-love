@@ -4,3 +4,13 @@ body {
     background: $bg-color;
     height: 100%;
 }
+
+.CurrentPrices {
+  .ui.card, .ui.cards>.card {
+    width: 100%;
+    margin-bottom: 40px;
+     &:last-child {
+       margin-bottom: 40px;
+     }
+  }
+}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, Card } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import autobind from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -7,7 +7,7 @@ import { addExchange, addCurrencyPair, fetchExchangeData } from '../actions';
 import { store } from '../';
 
 
-import Ticker, { ITickerData } from '../components/Ticker';
+import Ticker from '../components/Ticker';
 import { IPriceData, IExchange } from '../reducers';
 
 import './styles/CurrentPrices.scss';
@@ -24,6 +24,7 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
 
     public exchanges: IExchange[];
     public currencyPairs: string[];
+    private polls: any[];
 
     constructor(props) {
         super(props);
@@ -63,28 +64,40 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
         if (nextProps.exchanges && nextProps.exchanges.length && nextProps.exchanges !== this.props.exchanges) {
             nextProps.exchanges.forEach(exchange => {
                 store.dispatch(fetchExchangeData(exchange));
+                setInterval(()=> {
+                    console.log('fetching from setInterval ----------');
+                    store.dispatch(fetchExchangeData(exchange));
+                }, 60000);
             });
         }
 
-        console.log(nextProps);
+        if (nextProps.tickers) {
+            console.log(nextProps.tickers);
+        }
     }
 
-    @autobind
-    onUpdatePrices(pair: string, data: ITickerData, timestamp: number) {
-        console.log(pair, data, timestamp);
-        console.log('-------------------------------------------------------------------------');
-        // Make some call to the redux store to add the new ticker data
+    renderTickerMarkup(tickers): JSX.Element[] {
+        if (tickers.length) {
+            return this.props.tickers.map(ticker => {
+                return (
+                    <Grid.Column stretched key={ticker.pair} width="4">
+                        <Ticker tickerData={ticker}/>
+                    </Grid.Column>
+                );
+            });
+        } else {
+            return null;
+        }
     }
 
     render() {
-        const tickers = this.currencyPairs.map((pair, idx, pairs) => {
-            return <Ticker key={pair} interval={60000 * (idx+1)} currencyPair={pair} onChange={this.onUpdatePrices}/>;
-        });
+        const tickerMarkup = this.renderTickerMarkup(this.props.tickers);
 
         return (
             <div className="CurrentPrices">
-                <Grid stackable={true}>
-                    <Grid.Row columns={16}>
+                <Grid stackable={true} centered>
+                    <Grid.Row columns="16">
+                        {tickerMarkup}
                     </Grid.Row>
                 </Grid>
             </div>
