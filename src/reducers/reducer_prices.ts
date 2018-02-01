@@ -61,10 +61,10 @@ export default function(state = INITIAL_STATE as IAppState, action: IAction) {
             let tickerToUpdate = state.tickers.find(ticker => ticker.pair === action.payload.pair);
             tickerToUpdate.prices = tickerToUpdate.prices.concat([action.payload]);
 
-            let tickers = [].concat(state.tickers.filter(ticker => ticker.pair !== action.payload.pair));
-            tickers.push(tickerToUpdate);
+            let updatedTickers = [].concat(state.tickers.filter(ticker => ticker.pair !== action.payload.pair));
+            updatedTickers.push(tickerToUpdate);
 
-            const newstate = Object.assign({}, state, {tickers});
+            const newstate = Object.assign({}, state, {tickers: updatedTickers});
             return  newstate;
 
         default:
