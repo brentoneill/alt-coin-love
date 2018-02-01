@@ -40,7 +40,6 @@ export function fetchExchangeData(exchange: IExchange) {
             transformedData.tickers.forEach(ticker => {
                 ticker.exchange = exchange;
                 dispatch(addExchangeDataToTicker(ticker));
-
             });
         });
     }
@@ -57,7 +56,7 @@ function transformExchangeData(currencyPairs: string[], exchange: IExchange, dat
                 return {
                     timestamp: new Date(),
                     pair: pair,
-                    price: data[transformedPair].last,
+                    price: parseFloat(data[transformedPair].last),
                     volume: data[transformedPair].baseVolume
                 };
             });
@@ -74,7 +73,7 @@ function transformExchangeData(currencyPairs: string[], exchange: IExchange, dat
                 return {
                     timestamp: new Date(),
                     pair: pair,
-                    price: priceData.last,
+                    price: parseFloat(priceData.last),
                     volume: priceData.volumeQuote
                 };
             });
@@ -87,7 +86,7 @@ function transformExchangeData(currencyPairs: string[], exchange: IExchange, dat
                 return {
                     timestamp: new Date(),
                     pair: pair,
-                    price: data[transformedPair].last_trade,
+                    price: parseFloat(data[transformedPair].last_trade),
                     volume: data[transformedPair].vol
                 };
             });

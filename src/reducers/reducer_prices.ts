@@ -1,4 +1,6 @@
 import axios from 'axios';
+const deepAssign = require('deep-assign');
+
 
 import { IAction, ADD_CURRENCY_PAIR, ADD_EXCHANGE, ADD_EXCHANGE_DATA_TO_TICKER } from '../actions';
 
@@ -45,25 +47,27 @@ export default function(state = INITIAL_STATE as IAppState, action: IAction) {
 
         case ADD_CURRENCY_PAIR:
             const currencyPairs = state.currencyPairs.concat(action.payload);
-            const tickers = state.tickers.concat({
+            let tickers = state.tickers.concat({
                 pair: action.payload,
                 currentPrice: null,
                 currentVolume: null,
                 prices: []
             });
 
+
             return {...state, currencyPairs, tickers}
 
         case ADD_EXCHANGE_DATA_TO_TICKER:
             let tickerToUpdate = state.tickers.find(ticker => ticker.pair === action.payload.pair);
-            tickerToUpdate.prices.unshift(action.payload);
-            tickerToUpdate.currentPrice = action.payload.price;
-            tickerToUpdate.currentVolume = action.payload.volume;
+            tickerToUpdate.prices = tickerToUpdate.prices.concat([action.payload]);
 
-            let updatedTickers = state.tickers.filter(ticker => ticker.pair !== action.payload.pair);
-            updatedTickers.push(tickerToUpdate);
+            let tickers = [].concat(state.tickers.filter(ticker => ticker.pair !== action.payload.pair));
+            tickers.push(tickerToUpdate);
 
-            return {...state, tickers: updatedTickers};
+
+            const newstate = Object.assign({}, state, {tickers});
+            console.log(newstate)
+            return  newstate;
 
         default:
             return state;

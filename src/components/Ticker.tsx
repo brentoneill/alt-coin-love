@@ -9,14 +9,18 @@ interface ITickerProps {
   tickerData: any;
 }
 
-interface ITickerState {}
+interface ITickerState {
+  prices: any[];
+}
 
 export default class Ticker extends React.Component<ITickerProps, ITickerState> {
 
     constructor(props: ITickerProps) {
       super(props);
 
-      this.state = {};
+      this.state = {
+        prices: props.tickerData.prices
+      };
     }
 
     componentWillMount() {
@@ -25,17 +29,44 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
     componentWillUnmount() {
     }
 
+    componentWillReceiveProps(nextProps: ITickerProps) {
+      if (nextProps && nextProps.tickerData && nextProps.tickerData.prices && nextProps.tickerData.prices.length !== this.state.prices.length) {
+        this.setState({ prices: nextProps.tickerData.prices });
+      }
+    }
+
     renderExchangePriceListMarkup(recentPriceData): JSX.Element {
       if (recentPriceData && recentPriceData.length) {
-        return recentPriceData.map((priceData, idx) => {
+        recentPriceData = recentPriceData.sort((a, b) => {
+          if (a.price > b.price) {
+            return -1;
+          }
+
+          if (b.price > a.price) {
+            return 1;
+          }
+
+          if (b.price === a.price) {
+            return 0;
+          }
+        });
+        return recentPriceData.map((priceData, idx, arr) => {
+          let bestDealIdx = 0;
+          let showBestDealBadge = false;
+          if (bestDealIdx === idx) {
+            showBestDealBadge = true;
+          }
+
+          let bestDealBadgeMarkup = showBestDealBadge ? <Button basic color="green" onClick={ () => { window.open(priceData.exchange.appUrl)} }>Best Deal</Button> : null;
+
           return (
             <List.Item key={idx}>
-              <List.Content floated='right'>
-               {priceData.price}
-                <Button onClick={ () => { window.open(priceData.exchange.appUrl)} }>BEST</Button>
+              <List.Content verticalAlign="middle" floated='right'>
+               <span className="Ticker__list-item-price">{priceData.price}/BTC</span>
+               {bestDealBadgeMarkup}
               </List.Content>
-              <List.Content>
-                {priceData.exchange.name}
+              <List.Content verticalAlign="middle" >
+                <a className="Ticker__list-item-title" href="priceData.exchange.appUrl" target="_blank">{priceData.exchange.name}</a>
               </List.Content>
             </List.Item>
           );
@@ -47,7 +78,8 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
 
     render(): JSX.Element {
         const { pair, currentPrice, currentVolume } = this.props.tickerData;
-        const recentPriceData = this.props.tickerData.prices.length ? this.props.tickerData.prices.splice(0, 3) : [];
+        const { prices } = this.state;
+        const recentPriceData = prices.slice(0, 3);
         const exchangePriceListMarkup = this.renderExchangePriceListMarkup(recentPriceData)
         const coin = pair.split('-')[0].toUpperCase();
 

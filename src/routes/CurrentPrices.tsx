@@ -70,17 +70,13 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
                 }, 60000);
             });
         }
-
-        if (nextProps.tickers) {
-            console.log(nextProps.tickers);
-        }
     }
 
     renderTickerMarkup(tickers): JSX.Element[] {
         if (tickers.length) {
             return this.props.tickers.map(ticker => {
                 return (
-                    <Grid.Column stretched key={ticker.pair} width="4">
+                    <Grid.Column stretched key={ticker.pair} width="9">
                         <Ticker tickerData={ticker}/>
                     </Grid.Column>
                 );
