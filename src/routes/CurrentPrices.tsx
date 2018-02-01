@@ -65,9 +65,10 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
             nextProps.exchanges.forEach(exchange => {
                 store.dispatch(fetchExchangeData(exchange));
                 setInterval(()=> {
-                    console.log('fetching from setInterval ----------');
+                    console.log('Fetching Exchange Data...');
+                    console.log('---------------------------------------------');
                     store.dispatch(fetchExchangeData(exchange));
-                }, 20000);
+                }, 60000);
             });
         }
     }
