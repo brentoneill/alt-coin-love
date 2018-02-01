@@ -27,14 +27,13 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
 
     renderExchangePriceListMarkup(recentPriceData): JSX.Element {
       if (recentPriceData && recentPriceData.length) {
-        return recentPriceData.map(priceData => {
+        return recentPriceData.map((priceData, idx) => {
           return (
-            <List.Item>
+            <List.Item key={idx}>
               <List.Content floated='right'>
                {priceData.price}
                 <Button onClick={ () => { window.open(priceData.exchange.appUrl)} }>BEST</Button>
               </List.Content>
-              <Image avatar src={priceData.exchange.imageUrl} />
               <List.Content>
                 {priceData.exchange.name}
               </List.Content>
@@ -57,16 +56,14 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
             <Card>
               <Card.Content>
                 <Card.Header>
-                  <h2>Ticker for { pair } <i className={`cc ${coin}`}></i></h2>
+                  <h2>{ pair.toUpperCase() } <i className={`cc ${coin}`}></i></h2>
                 </Card.Header>
                 <Card.Meta>
-                  <span className='date'>
-                    Updated at {recentPriceData.length ? recentPriceData[0].timestamp : null}
-                  </span>
+
                 </Card.Meta>
                 <Card.Description>
-                  <h3>{ currentPrice }</h3>
-                  <h5>{ currentVolume }</h5>
+                  <h3>Price (BTC): { currentPrice }</h3>
+                  <h5>Volume: { currentVolume }</h5>
                 </Card.Description>
               </Card.Content>
               <Card.Content extra>
