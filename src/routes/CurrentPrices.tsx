@@ -67,7 +67,7 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
                 setInterval(()=> {
                     console.log('fetching from setInterval ----------');
                     store.dispatch(fetchExchangeData(exchange));
-                }, 60000);
+                }, 20000);
             });
         }
     }
@@ -92,6 +92,9 @@ class CurrentPrices extends React.Component<ICurrentPricesProps, {}> {
         return (
             <div className="CurrentPrices">
                 <Grid stackable={true} centered>
+                    <Grid.Row columns="16">
+                        <h1>Current Prices</h1>
+                    </Grid.Row>
                     <Grid.Row columns="16">
                         {tickerMarkup}
                     </Grid.Row>

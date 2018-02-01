@@ -1,7 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import autobind from 'autobind-decorator';
-import { Card, List, Button } from 'semantic-ui-react';
+import { Card, Table, Button } from 'semantic-ui-react';
 
 import 'cryptocoins-icons/webfont/cryptocoins.css';
 
@@ -23,27 +23,22 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
       };
     }
 
-    componentWillMount() {
-    }
-
-    componentWillUnmount() {
-    }
-
     componentWillReceiveProps(nextProps: ITickerProps) {
       if (nextProps && nextProps.tickerData && nextProps.tickerData.prices && nextProps.tickerData.prices.length !== this.state.prices.length) {
         this.setState({ prices: nextProps.tickerData.prices });
       }
     }
 
-    renderExchangePriceListMarkup(recentPriceData): JSX.Element {
-      if (recentPriceData && recentPriceData.length) {
+    renderExchangePriceListMarkup(prices): JSX.Element {
+      if (prices && prices.length) {
+        let recentPriceData = prices.slice(-3);
         recentPriceData = recentPriceData.sort((a, b) => {
           if (a.price > b.price) {
-            return -1;
+            return 1;
           }
 
           if (b.price > a.price) {
-            return 1;
+            return -1;
           }
 
           if (b.price === a.price) {
@@ -60,15 +55,20 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
           let bestDealBadgeMarkup = showBestDealBadge ? <Button basic color="green" onClick={ () => { window.open(priceData.exchange.appUrl)} }>Best Deal</Button> : null;
 
           return (
-            <List.Item key={idx}>
-              <List.Content verticalAlign="middle" floated='right'>
-               <span className="Ticker__list-item-price">{priceData.price}/BTC</span>
-               {bestDealBadgeMarkup}
-              </List.Content>
-              <List.Content verticalAlign="middle" >
-                <a className="Ticker__list-item-title" href="priceData.exchange.appUrl" target="_blank">{priceData.exchange.name}</a>
-              </List.Content>
-            </List.Item>
+            <Table.Row key={idx}>
+              <Table.Cell>
+                <p>{priceData.exchange.name.charAt(0).toUpperCase() + priceData.exchange.name.slice(1)}</p>
+              </Table.Cell>
+              <Table.Cell>
+                <a className="Ticker__list-item-title" href="priceData.exchange.appUrl" target="_blank">{priceData.exchange.appUrl}</a>
+              </Table.Cell>
+              <Table.Cell>
+                <span className="Ticker__list-item-price">{parseFloat(priceData.price).toFixed(8)}/BTC</span>
+              </Table.Cell>
+              <Table.Cell textAlign="right">
+                {bestDealBadgeMarkup}
+              </Table.Cell>
+            </Table.Row>
           );
         });
       } else {
@@ -87,43 +87,43 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
       return (weightedPrice / recentPriceData.length).toFixed(8);
     }
 
-    calculateVolume(recentPriceData): number {
-      let volume;
-
-      recentPriceData.forEach(priceData => {
-        volume = volume + parseFloat(priceData.volume);
-      });
-
-      return volume;
-    }
-
     render(): JSX.Element {
         const { pair } = this.props.tickerData;
         const { prices } = this.state;
-        const recentPriceData = prices.slice(0, 3);
+
+        const recentPriceData = prices.slice(-3)
         const currentPrice = this.calculateWeightedPrice(recentPriceData);
-        const currentVolume = this.calculateVolume(recentPriceData);
-        const exchangePriceListMarkup = this.renderExchangePriceListMarkup(recentPriceData)
+        const exchangePriceListMarkup = this.renderExchangePriceListMarkup(prices)
         const coin = pair.split('-')[0].toUpperCase();
 
         return (
           <div className={`Ticker Ticker--${pair}`}>
-            <Card>
+            <Card raised>
               <Card.Content>
                 <Card.Header>
                   <h2><i className={`cc ${coin}`}></i>&nbsp; { pair.toUpperCase() }</h2>
                 </Card.Header>
-                <Card.Meta>
-                </Card.Meta>
                 <Card.Description>
                   <h3>Price (BTC): { currentPrice }</h3>
-                  <h5>Volume: { currentVolume }</h5>
                 </Card.Description>
+                <Card.Meta>
+                  <span>Updated at { recentPriceData.length ? recentPriceData[0].timestamp.toLocaleTimeString("en-US") : 'n/a' }</span>
+                </Card.Meta>
               </Card.Content>
               <Card.Content extra>
-              <List divided verticalAlign='middle'>
-                {exchangePriceListMarkup}
-                </List>
+                <Table color={'green'} sortable>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Exchange</Table.HeaderCell>
+                      <Table.HeaderCell>URL</Table.HeaderCell>
+                      <Table.HeaderCell>Price</Table.HeaderCell>
+                      <Table.HeaderCell></Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {exchangePriceListMarkup}
+                  </Table.Body>
+                </Table>
               </Card.Content>
             </Card>
           </div>
