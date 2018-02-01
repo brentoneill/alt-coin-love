@@ -15,7 +15,7 @@ export default class PriceList extends React.Component<IPriceListProps, IPriceLi
     render() {
         return (
             <div className="PriceList">
-               PriceList
+               Historic Prices
             </div>
         );
     }

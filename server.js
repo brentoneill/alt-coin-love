@@ -18,8 +18,15 @@ app.use(compression())                          // Enables GZIP
 
 // Set the route
 app.get('*', (req, res) => {
+    const origin = req.get('origin');
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
     // ejs render automatically looks in the views folder
     res.render('index')
+
+    next();
 });
 
 
