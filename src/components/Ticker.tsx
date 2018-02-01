@@ -15,12 +15,16 @@ interface ITickerState {
 
 export default class Ticker extends React.Component<ITickerProps, ITickerState> {
 
+    private oldPriceData: any[];
+
     constructor(props: ITickerProps) {
       super(props);
 
       this.state = {
         prices: props.tickerData.prices
       };
+
+      this.oldPriceData = [];
     }
 
     componentWillReceiveProps(nextProps: ITickerProps) {
@@ -31,7 +35,7 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
 
     renderExchangePriceListMarkup(prices): JSX.Element {
       if (prices && prices.length) {
-        let recentPriceData = prices.slice(-3);
+        let recentPriceData = prices;
         recentPriceData = recentPriceData.sort((a, b) => {
           if (a.price > b.price) {
             return 1;
@@ -76,6 +80,7 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
       }
     }
 
+    // NOTE: Currently just taking average due to volume inconsistencies
     calculateWeightedPrice(recentPriceData): string {
       let weightedPrice = 0;
 
@@ -83,17 +88,15 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
         weightedPrice += priceData.price;
       });
 
-
       return (weightedPrice / recentPriceData.length).toFixed(8);
     }
 
     render(): JSX.Element {
         const { pair } = this.props.tickerData;
         const { prices } = this.state;
-
-        const recentPriceData = prices.slice(-3)
+        const recentPriceData = [].concat(prices.slice(-3));
         const currentPrice = this.calculateWeightedPrice(recentPriceData);
-        const exchangePriceListMarkup = this.renderExchangePriceListMarkup(prices)
+        const exchangePriceListMarkup = this.renderExchangePriceListMarkup(recentPriceData)
         const coin = pair.split('-')[0].toUpperCase();
 
         return (
