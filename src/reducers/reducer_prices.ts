@@ -64,9 +64,7 @@ export default function(state = INITIAL_STATE as IAppState, action: IAction) {
             let tickers = [].concat(state.tickers.filter(ticker => ticker.pair !== action.payload.pair));
             tickers.push(tickerToUpdate);
 
-
             const newstate = Object.assign({}, state, {tickers});
-            console.log(newstate)
             return  newstate;
 
         default:

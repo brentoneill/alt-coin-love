@@ -91,7 +91,6 @@ export default class Ticker extends React.Component<ITickerProps, ITickerState> 
       let volume;
 
       recentPriceData.forEach(priceData => {
-        console.log(priceData.volume)
         volume = volume + parseFloat(priceData.volume);
       });
 
